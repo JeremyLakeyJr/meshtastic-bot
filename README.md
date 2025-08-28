@@ -13,18 +13,20 @@ A nodeless Meshtastic chatbot that ingests Protobuf over MQTT and sends JSON dow
 
 ## Setup
 
-1. Install dependencies:
+1. Set up infrastructure: MQTT server (I use Mosquitto) and an account with read and write permissions for hte bot to use
+
+2. Get yourself a Gemini AI API key
+
+3. Set up a dedicated Gmail account for the bot to use for email sending and receiving. There is a GMAIL_SETUP.md file to go through for that
+
+4. Make sure to include all of the config items in a file named config.env (you can use the config.env.example file as an example)
+
+5. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-2. Configure environment variables in `config.env`:
-   - MQTT connection details
-   - Gemini API key
-   - Mesh region and version
-   - Response chunking settings
-
-3. Run the bot:
+6. Run the bot:
    ```bash
    python main.py
    ```
