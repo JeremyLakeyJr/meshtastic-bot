@@ -15,13 +15,14 @@ logger = logging.getLogger(__name__)
 class AIHandler:
     """Handles AI interactions using Google Gemini with per-user chat sessions."""
     
-    def __init__(self, api_key: str, model_name: str = "gemini-1.5-flash"):
+    def __init__(self, api_key: str, model_name: str = "gemini-1.5-flash", system_prompt: Optional[str] = None):
         """
         Initialize AI handler.
 
         Args:
             api_key: Google Gemini API key
             model_name: Gemini model to use
+            system_prompt: The system prompt to use for the AI
         """
         self.api_key = api_key
         self.model_name = model_name
@@ -50,14 +51,7 @@ class AIHandler:
         self._chats: Dict[str, any] = {}
 
         # One-time brevity preamble injected when a new chat is created.
-        self._brevity_preamble = (
-            "You are a Meshtastic DM bot with strict brevity rules.\n"
-            "- Aim for ~250–450 characters total.\n"
-            "- Never under 200 chars; never over 600 chars.\n"
-            "- 1–3 short bullet points OR one concise paragraph.\n"
-            "- No greetings/preamble/fluff; deliver facts/steps.\n"
-            "- If listing steps, use '- <step>'."
-        )
+        self._system_prompt = system_prompt or "You are a helpful assistant."
 
         self._setup_model()
 
@@ -80,7 +74,7 @@ class AIHandler:
         if chat is None:
             chat = self.model.start_chat(
                 history=[
-                    {"role": "user", "parts": [self._brevity_preamble]},
+                    {"role": "user", "parts": [self._system_prompt]},
                     {"role": "model", "parts": ["OK"]},
                 ]
             )
